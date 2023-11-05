@@ -22,7 +22,7 @@ class DepthFirstGeneratorTest {
     void generateMaze(int height, int width) {
         DepthFirstGenerator generator = new DepthFirstGenerator();
         Maze maze = generator.generate(height, width);
-        new ConsoleRenderer(maze);
+        System.out.println(new ConsoleRenderer(maze).render(maze));
         assertNotNull(maze);
         assertEquals(height, maze.getHeight());
         assertEquals(width, maze.getWidth());

@@ -24,7 +24,7 @@ public class BreadthFirstSolverTest {
     @MethodSource("mazeCoordinatesProvider")
     public void testDepthFirstSolver(Maze maze, Coordinate start, Coordinate end, List<Coordinate> expectedPath) {
         BreadthFirstSolver solver = new BreadthFirstSolver();
-        new ConsoleRenderer(maze);
+        System.out.println(new ConsoleRenderer(maze).render(maze));
         List<Coordinate> actualPath = solver.solve(maze, start, end);
 
         assertThat(actualPath).isEqualTo(expectedPath);

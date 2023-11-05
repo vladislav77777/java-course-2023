@@ -22,7 +22,7 @@ class BreadthFirstGeneratorTest {
     void generateMazeSecondApproach(int height, int width) {
         BFSGenerator generator = new BFSGenerator();
         Maze maze = generator.generate(height, width);
-        new ConsoleRenderer(maze);
+        System.out.println(new ConsoleRenderer(maze).render(maze));
         assertNotNull(maze);
         assertEquals(height, maze.getHeight());
         assertEquals(width, maze.getWidth());
