@@ -13,7 +13,7 @@ public final class Task8 {
     }
 
     public static boolean hasMultipleOfThreeZeros(String input) {
-        return input.matches("^((101*01*0)|(01*01*0))*1*$");
+        return input.matches("^((1*01*01*0)|(01*01*0))*1*$");
     }
 
     public static boolean isNotElevenOrTripleOne(String input) {
