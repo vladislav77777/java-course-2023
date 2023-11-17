@@ -7,7 +7,7 @@ public class StockMarketImpl implements StockMarket {
     private final PriorityQueue<Stock> stockQueue;
 
     public StockMarketImpl() {
-        stockQueue = new PriorityQueue<>(Comparator.comparing(Stock::getPrice).reversed());
+        stockQueue = new PriorityQueue<>(Comparator.comparing(Stock::price).reversed());
     }
 
     @Override

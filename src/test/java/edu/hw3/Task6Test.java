@@ -22,7 +22,7 @@ public class Task6Test {
             stockMarket.add(stock);
         }
 
-        assertThat(stockMarket.mostValuableStock().getSymbol()).isEqualTo(expectedSymbol);
+        assertThat(stockMarket.mostValuableStock().symbol()).isEqualTo(expectedSymbol);
     }
 
     private static Stream<Arguments> provideStocks() {
@@ -49,6 +49,6 @@ public class Task6Test {
 
         stockMarket.remove(googl);
 
-        assertThat(stockMarket.mostValuableStock().getSymbol()).isEqualTo("AMZN");
+        assertThat(stockMarket.mostValuableStock().symbol()).isEqualTo("AMZN");
     }
 }

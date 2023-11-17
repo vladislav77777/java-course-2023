@@ -19,7 +19,7 @@ final class Task2 {
             if (c == '(') {
                 stack.push(i);
 
-            } else if (c == ')' && s.charAt(stack.peek()) == '(') {
+            } else if (c == ')' && !stack.empty() && s.charAt(stack.peek()) == '(') {
                 openValue = stack.pop();
                 if (stack.isEmpty()) {
                     result.add("\"" + s.substring(openValue, i + 1) + "\"");
