@@ -1,0 +1,2 @@
+138.222.175.8 - - [17/Nov/2023:20:08:53 +0000] "POST /Business-focused%20zero%20administration/Devolved%20middleware/foreground.php HTTP/1.1" 200 999 "-" "Mozilla/5.0 (Windows; U; Windows NT 5.2) AppleWebKit/532.3.7 (KHTML, like Gecko) Version/6.2 Safari/532.3.7"
+249.183.62.9 - - [17/Nov/2023:20:08:53 +0000] "GET /Automated-Sharable_parallelism/pricing%20structure.svg HTTP/1.1" 200 2557 "-" "Mozilla/5.0 (Macintosh; PPC Mac OS X 10_5_7 rv:5.0) Gecko/1999-31-03 Firefox/37.0"
