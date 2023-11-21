@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.*;
 
 public class Task2Test {
 
+
     @Test
     void testCloneFile() {
         Path filePath = Paths.get("src\\test\\resources\\data\\Tinkoff Bank Biggest Secret.txt");
