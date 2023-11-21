@@ -9,8 +9,7 @@ public final class Task7 {
     }
 
     public static boolean validateString(String input) {
-        return validateStringFirstCondition(input)
-            || validateStringSecondCondition(input)
+        return validateStringFirstCondition(input) || validateStringSecondCondition(input)
             || validateStringThirdCondition(input);
     }
 
