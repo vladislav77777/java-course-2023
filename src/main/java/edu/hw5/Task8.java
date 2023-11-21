@@ -1,5 +1,6 @@
 package edu.hw5;
 
+@SuppressWarnings("checkstyle:ReturnCount")
 public final class Task8 {
     private Task8() {
     }
@@ -32,16 +33,25 @@ public final class Task8 {
         return input.matches("^(?!.*11)[01]*$");
     }
 
-    public static boolean validateInput(String input, int conditionIndex) {
-        return switch (conditionIndex) {
-            case 1 -> isOddLength(input);
-            case 2 -> hasSpecificLengthAndStartsWith(input);
-            case 2 + 1 -> hasMultipleOfThreeZeros(input);
-            case 2 + 2 -> isNotElevenOrTripleOne(input);
-            case 2 * 2 + 1 -> hasOddOnOddIndices(input);
-            case 2 * 2 + 2 -> hasAtLeastTwoZerosAtMostOneOne(input);
-            case 2 * 2 * 2 - 1 -> hasNoConsecutiveOnes(input);
-            default -> false;
+    public enum Condition {
+        ODD_LENGTH,
+        SPECIFIC_LENGTH_AND_STARTS_WITH,
+        MULTIPLE_OF_THREE_ZEROS,
+        NOT_ELEVEN_OR_TRIPLE_ONE,
+        ODD_ON_ODD_INDICES,
+        AT_LEAST_TWO_ZEROS_AT_MOST_ONE_ONE,
+        NO_CONSECUTIVE_ONES
+    }
+
+    static boolean validateInput(String input, Condition condition) {
+        return switch (condition) {
+            case ODD_LENGTH -> isOddLength(input);
+            case SPECIFIC_LENGTH_AND_STARTS_WITH -> hasSpecificLengthAndStartsWith(input);
+            case MULTIPLE_OF_THREE_ZEROS -> hasMultipleOfThreeZeros(input);
+            case NOT_ELEVEN_OR_TRIPLE_ONE -> isNotElevenOrTripleOne(input);
+            case ODD_ON_ODD_INDICES -> hasOddOnOddIndices(input);
+            case AT_LEAST_TWO_ZEROS_AT_MOST_ONE_ONE -> hasAtLeastTwoZerosAtMostOneOne(input);
+            case NO_CONSECUTIVE_ONES -> hasNoConsecutiveOnes(input);
         };
     }
 }
