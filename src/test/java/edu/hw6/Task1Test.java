@@ -7,7 +7,7 @@ public class Task1Test {
 
     @Test
     public void saveAndLoadTest() {
-        Task1 diskMap = new Task1("data/diskmap.txt");
+        Task1 diskMap = new Task1("src/test/resources/data/diskmap.txt");
 
         // Add multiple entries
         diskMap.put("key1", "value1");
@@ -18,7 +18,8 @@ public class Task1Test {
         diskMap.saveToFile();
         diskMap.clear();
         // Create a new instance to test loading
-        Task1 loadedDiskMap = new Task1("data/diskmap.txt");
+
+        Task1 loadedDiskMap = new Task1("src/test/resources/data/diskmap.txt");
 
         // Verify that all entries are loaded
         assertThat(loadedDiskMap.size()).isEqualTo(3);

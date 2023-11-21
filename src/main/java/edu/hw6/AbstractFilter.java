@@ -1,6 +1,7 @@
 package edu.hw6;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,10 +40,10 @@ public interface AbstractFilter extends DirectoryStream.Filter<Path> {
 
     static AbstractFilter magicNumber(int... magicBytes) {
         return (path) -> {
-            try {
-                byte[] fileBytes = Files.readAllBytes(path);
-                for (int i = 0; i < magicBytes.length; i++) {
-                    if (fileBytes[i] != (byte) magicBytes[i]) {
+            try (InputStream inputStream = Files.newInputStream(path)) {
+                for (int magicByte : magicBytes) {
+                    int readByte = inputStream.read();
+                    if (readByte != magicByte) {
                         return false;
                     }
                 }

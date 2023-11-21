@@ -14,7 +14,7 @@ public class Task3Test {
 
     @Test
     public void dataFilterTest() {
-        Path dir = Paths.get("data\\dataFilter");
+        Path dir = Paths.get("src\\test\\resources\\data\\dataFilter");
 
         DirectoryStream.Filter<Path> filter = AbstractFilter.regularFile()
             .and(AbstractFilter.readable())
@@ -31,8 +31,8 @@ public class Task3Test {
             assertThat(fileList)
                 .hasSize(2)
                 .containsExactly(
-                    Paths.get("data\\dataFilter", "diskmap.txt"), // in our case
-                    Paths.get("data\\dataFilter", "Tinkoff Bank Biggest Secret.txt")
+                    Paths.get("src\\test\\resources\\data\\dataFilter", "diskmap.txt"), // in our case
+                    Paths.get("src\\test\\resources\\data\\dataFilter", "Tinkoff Bank Biggest Secret.txt")
                 );
         } catch (IOException e) {
             e.printStackTrace();
@@ -42,7 +42,7 @@ public class Task3Test {
 
     @Test
     public void dataFilterPNGTest() {
-        Path dir = Paths.get("data\\dataFilter");
+        Path dir = Paths.get("src\\test\\resources\\data\\dataFilter");
 
         DirectoryStream.Filter<Path> filter = AbstractFilter.regularFile()
             .and(AbstractFilter.readable())
@@ -59,7 +59,7 @@ public class Task3Test {
             assertThat(fileList)
                 .hasSize(1)
                 .containsExactly(
-                    Paths.get("data\\dataFilter", "inno.png") // in our case
+                    Paths.get("src\\test\\resources\\data\\dataFilter", "inno.png") // in our case
                 );
         } catch (IOException e) {
             e.printStackTrace();

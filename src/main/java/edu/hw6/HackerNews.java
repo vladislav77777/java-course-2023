@@ -15,6 +15,7 @@ public class HackerNews {
     public long[] hackerNewsTopStories() {
         try {
             HttpClient httpClient = HttpClient.newHttpClient();
+            // incompatible types: try-with-resources not applicable to variable type java.net.http.HttpClient
             HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(TOP_STORIES_URL))
                 .build(); // the builder creates GET query by default
@@ -34,13 +35,15 @@ public class HackerNews {
         } catch (Exception e) {
 //            e.printStackTrace();
         }
+        // Ensure to close the HttpClient
 
         return new long[0];
     }
 
     public String news(long id) {
+        String itemUrl = String.format(ITEM_URL_FORMAT, id);
+
         try {
-            String itemUrl = String.format(ITEM_URL_FORMAT, id);
             HttpClient httpClient = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(itemUrl))

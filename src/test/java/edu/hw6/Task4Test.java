@@ -17,7 +17,7 @@ public class Task4Test {
 
     @Test
     public void writers() {
-        Path filePath = Path.of("data\\output.txt");
+        Path filePath = Path.of("src\\test\\resources\\data\\output.txt");
 
         try (OutputStream fileOutputStream = Files.newOutputStream(filePath, StandardOpenOption.CREATE);
              CheckedOutputStream checkedOutputStream = new CheckedOutputStream(fileOutputStream, new CRC32());
