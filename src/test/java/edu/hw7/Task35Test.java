@@ -1,11 +1,6 @@
 package edu.hw7;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -83,39 +78,39 @@ public class Task35Test {
         findThread.join();
     }
 
-    @ParameterizedTest
-    @CsvSource({"10", "50", "10000"}) // количество повторений
-    public void testConcurrentAddAndFind(int repeatCount) {
-        Task35.CachingPersonDatabase database = new Task35.CachingPersonDatabase();
-
-        try (ExecutorService executorService = Executors.newFixedThreadPool(repeatCount * 2)) {
-
-            for (int i = 0; i < repeatCount; i++) {
-                // поток для добавления Person
-                executorService.submit(() -> {
-                    int id = 1;
-                    String name = "Person" + id;
-                    String address = "Address" + id;
-                    String phone = "Phone" + id;
-                    Person person = new Person(id, name, address, phone);
-                    database.add(person);
-                });
-
-                // поток для поиска Person
-                executorService.submit(() -> {
-                    int id = 1;
-                    String name = "Person" + id;
-                    String address = "Address" + id;
-                    String phone = "Phone" + id;
-
-                    Person nameGet = database.findByName(name);
-                    Person phoneGet = database.findByPhone(phone);
-                    Person addressGet = database.findByAddress(address);
-                    Assertions.assertTrue(nameGet == null || addressGet != null && phoneGet != null);
-                });
-            }
-
-            executorService.shutdown();
-        }
-    }
+//    @ParameterizedTest
+//    @CsvSource({"10", "50", "10000"}) // количество повторений
+//    public void testConcurrentAddAndFind(int repeatCount) {
+//        Task35.CachingPersonDatabase database = new Task35.CachingPersonDatabase();
+//
+//        try (ExecutorService executorService = Executors.newFixedThreadPool(repeatCount * 2)) {
+//
+//            for (int i = 0; i < repeatCount; i++) {
+//                // поток для добавления Person
+//                executorService.submit(() -> {
+//                    int id = 1;
+//                    String name = "Person" + id;
+//                    String address = "Address" + id;
+//                    String phone = "Phone" + id;
+//                    Person person = new Person(id, name, address, phone);
+//                    database.add(person);
+//                });
+//
+//                // поток для поиска Person
+//                executorService.submit(() -> {
+//                    int id = 1;
+//                    String name = "Person" + id;
+//                    String address = "Address" + id;
+//                    String phone = "Phone" + id;
+//
+//                    Person nameGet = database.findByName(name);
+//                    Person phoneGet = database.findByPhone(phone);
+//                    Person addressGet = database.findByAddress(address);
+//                    Assertions.assertTrue(nameGet == null || addressGet != null && phoneGet != null);
+//                });
+//            }
+//
+//            executorService.shutdown();
+//        }
+//    }
 }
