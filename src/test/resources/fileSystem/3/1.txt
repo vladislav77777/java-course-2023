@@ -1,0 +1,248 @@
+# Вам дан массив целых неотрицательных чисел. Вы хотите найти в нем такой подотрезок (последовательность подряд идущих элементов), что в нем максимально возможная сумма, помноженная на минимум.Итак, для начала требуется решить вспомогательную задачу - для каждого элемента массива найти ближайший слева элемент, меньший данного.Для поиска суммы на отрезке можно воспользоваться, например, префиксными суммами.
+n = int(input())
+arr = list(map(int, input().split()))
+stack=[]
+lessleft = [-1]*n
+for i in range(len(arr)-1, -1, -1):
+  while len(stack) != 0 and arr[i] < stack[-1][0]:
+    lessleft[stack.pop()[1]] = i
+  stack.append((arr[i], i))
+
+stack=[]
+lessright = [-1]*n
+i = 0
+for elem in arr:
+  while len(stack) != 0 and elem < stack[-1][0]:
+    lessright[stack.pop()[1]] = i
+  stack.append((elem, i))
+  i+=1
+
+prefarr = [0]*n
+prefarr[0] = arr[0]
+for i in range(1, len(arr)):
+  prefarr[i] = prefarr[i-1] + arr[i]
+
+ans = 0
+for i in range(n):
+  # print(i, ans, "<--")
+  if lessleft[i] == -1 and lessright[i] == -1:
+    ans = max(arr[i] * prefarr[-1], ans)
+  elif lessleft[i] == -1:
+    ans = max(arr[i] * prefarr[lessright[i] - 1], ans)
+  elif lessright[i] == -1:
+    ans = max(arr[i] * (prefarr[-1] - prefarr[lessleft[i]]), ans)
+  else:
+    ans = max(arr[i] * (prefarr[lessright[i]-1] - prefarr[lessleft[i]]), ans)
+# print(*lessleft)
+# print(*lessright)
+# print(*prefarr)
+print(ans)
+
+
+
+
+
+
+In this exercise, you will implement a simulation of virtual
+memory in C to further understand how virtual memory works. In
+addition, you will use mmap and signals for process
+communication.
+Virtual memory allows a process of P pages to run in F frames,
+even if F < P. This mapping is achieved by use of a page table,
+which records which pages are in RAM at which frames, and a
+page fault mechanism by which the memory management unit
+(MMU) can ask the operating system (here it is the pager) to
+bring in a page from disk. Each process has a page table. The
+page table must be accessible by both the MMU and the pager,
+and an IPC mechanism is needed for communication between the
+MMU and pager. In this simulation, the job of the pager is to
+maintain a process’ use of RAM and the page table. The page
+table is held in memory backed by a file /tmp/ex2/pagetable, and
+signals are used for IPC.
+For simplicity, we assume that we run the program only for one
+process, the RAM is represented as an array RAM of strings of size
+F. The disk is represented by a an array disk of strings of size P.
+In both arrays, each array element (in this simulation, it is
+considered a page) is represented by a string of size 8.
+On startup, the array disk (represented by the disk) should
+contain different random messages (you can store manually or
+generate random printable characters) whereas the RAM is empty.
+When the pager needs to bring in a page i from the disk to frame
+j, it needs to copy the requested message i from disk array to RAM
+array in position j, then prints the RAM array. When the pager
+needs to write to disk (move the page of the frame j from the
+RAM to the disk in position i), it needs to copy the message j
+from RAM array to disk array in position i, then prints the RAM
+array. For simpicity, we assume that the write request, does not
+change the message but it just sets the dirty field.
+The page table has mainly four fields in each page table entry and
+defined as follows:
+struct PTE{
+// The page is in the physical memory ( RAM )
+bool valid ;
+// The frame number of the page in the RAM
+int frame ;
+// The page should be written to disk
+bool dirty ;
+// The page is referenced / requested
+int referenced ;
+}
+The pager process must create the page table as a memory
+mapped file, and initialize it to indicate that no pages are loaded
+(all valid and dirty fields are set to false, frame field is set to -1
+and referenced is set to 0). You can add more fields to the
+structure based on your implementation.
+Note: After you create a file to be mapped, you need to truncate
+it to the size of the page table using ftruncate before you map it
+using mmap. The size of the page table is the size of the struct
+PTE multiplied by the number of pages.
+Write a program mmu.c which accepts the command line
+arguments:
+The number of pages in the process.
+A reference string of memory accesses, each of the form mode page ,
+e.g., W3 is a write to page 3.
+The PID of the pager process.
+The MMU opens the mapped file /tmp/ex2/pagetable, then runs
+through the reference string. For each memory access, the MMU:
+1 Checks if the page is in RAM.
+2 If not in RAM (valid = 0), it sets the referenced field of the page to
+the PID of the MMU, and simulates a page fault by signaling the
+pager process with SIGUSR1. After that, it sleeps indefinitely until
+it receives a SIGCONT signal from the pager process to indicate
+that the page has been loaded to RAM.
+3 If the access is a write access, it sets the dirty field of the page.
+4 It prints the updated page table.
+When all memory accesses have been processed, the MMU closes
+the mapped file and signals the pager one last time (SIGUSR1).
+That must be detected by the pager process. If the pager process
+did not find any page referenced then the pager process can
+unmap the mapped file, delete the file and exit.
+Write another program pager.c which must take two arguments:
+The number of pages in the process.
+The number of frames allocated to the process
+Assume that the pages and frames are numbered 0, 1, 2, ...
+The pager process manages free frames, the disk array and RAM
+array.
+After creating and initializing the page table in the mapped file,
+the pager process must wait till accepting a SIGUSR1 signal from
+the MMU process. When it receives a signal, it must:
+1 Scan through the page table looking for a non-zero value in the
+referenced field.
+2 If a non-zero value is found, that indicates that the MMU wants the
+page at that index loaded.
+If there is a free frame, then allocate it to the page.
+If there are no free frames, choose a random frame in the table as a
+victim page (page replacement next lab). If the victim page is dirty,
+simulate writing the page to disk by copying the change from RAM
+to disk array, and increment the counter of disk accesses.
+Update the page table to indicate that the victim page is no longer
+present in RAM.
+Update the page table to indicate that the page is valid in the
+allocated frame, not dirty, and clear the referenced field.
+Print the updated page table.
+4 Send a SIGCONT signal to the MMU to indicate that the page is
+now loaded.
+5 If no non-zero referenced field was found, the pager process
+terminates.
+Before terminating the pager process, you must print out the total
+number of disk accesses, and destroy the mapped file.
+Make sure that the program prints enough informative messages
+for each step. For example, when there are no free frame, the
+program should tell the user that a victim page will be selected.
+Make sure that you cannot allocate more than F frames and check
+the validity of input data.
+Submit mmu.c and pager.c with a script ex2.sh to run the
+simulation
+Some test cases:
+Test case 1
+4 pages, 2 frames
+./pager 4 2
+./mmu 4 R0 R1 W1 R0 R2 W2 R0 R3 W2 $pid pager
+Test case 2
+5 pages 3 frames
+./pager 5 3
+./mmu 5 R0 R1 R0 W1 R0 R1 R0 W1 R0 R2 R0 W2 R0 R2 R0 W2
+R0 R3 R0 W3 R0 R3 R0 W3 R0 R4 R0 W4 R0 R4 R0 W4
+$pid pager
+
+
+
+Sample output format for Test case 1.
+pager process
+-------------------------
+Initialized page table
+Page 0 ---> valid=0, frame=-1, dirty=0, referenced=0
+Page 1 ---> valid=0, frame=-1, dirty=0, referenced=0
+Page 2 ---> valid=0, frame=-1, dirty=0, referenced=0
+Page 3 ---> valid=0, frame=-1, dirty=0, referenced=0
+-------------------------
+Initialized RAM
+RAM array
+Frame 0 --->
+Frame 1 --->
+-------------------------
+Initialized disk
+Disk array
+Page 0 ----> gEefwaq
+Page 1 ----> kjQ2eeq
+Page 2 ----> 43R2e2e
+Page 3 ----> jji2u32
+-------------------------
+A disk access request from MMU Process (pid=283032)
+Page 0 is referenced
+We can allocate it to free frame 0
+Copy data from the disk (page=0) to RAM (frame=0)
+RAM array
+Frame 0 ---> gEefwaq
+Frame 1 --->
+disk accesses is 1 so far
+Resume MMU process
+-------------------------
+A disk access request from MMU Process (pid=283032)
+Page 1 is referenced
+We can allocate it to free frame 1
+Copy data from the disk (page=1) to RAM (frame=1)
+RAM array
+Frame 0 ---> gEefwaq
+Frame 1 ---> kjQ2eeq
+disk accesses is 2 so far
+Resume MMU process
+-------------------------
+A disk access request from MMU Process (pid=283032)
+Page 2 is referenced
+We do not have free frames in RAM
+Chose a random victim page 0
+Replace/Evict it with page 2 to be allocated to frame 0
+Copy data from the disk (page=2) to RAM (frame=0)
+RAM array
+Frame 0 ---> 43R2e2e
+Frame 1 ---> kjQ2eeq
+disk accesses is 3 so far
+Resume MMU process
+-------------------------
+A disk access request from MMU Process (pid=283032)
+Page 0 is referenced
+We do not have free frames in RAM
+Chose a random victim page 1
+Replace/Evict it with page 0 to be allocated to frame 1
+Copy data from the disk (page=0) to RAM (frame=1)
+RAM array
+Frame 0 ---> 43R2e2e
+Frame 1 ---> gEefwaq
+disk accesses is 5 so far
+Resume MMU process
+-------------------------
+A disk access request from MMU Process (pid=283032)
+Page 3 is referenced
+We do not have free frames in RAM
+Chose a random victim page 0
+Replace/Evict it with page 3 to be allocated to frame 1
+Copy data from the disk (page=3) to RAM (frame=1)
+RAM array
+Frame 0 ---> 43R2e2e
+Frame 1 ---> jji2u32
+disk accesses is 6 so far
+Resume MMU process
+-------------------------
+6 disk accesses in total
+Pager is terminated
